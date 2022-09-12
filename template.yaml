@@ -1,0 +1,42 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Transform: AWS::Serverless-2016-10-31
+Description: >
+  sunshine-multiconvo-serverless-node
+
+  Sample SAM Template for sunshine-multiconvo-serverless-node
+
+# More info about Globals: https://github.com/awslabs/serverless-application-model/blob/master/docs/globals.rst
+Globals:
+  Function:
+    Timeout: 100
+    MemorySize: 128
+    Runtime: nodejs16.x
+    Architectures:
+      - x86_64
+Parameters:
+  Region:
+    Type: String
+    Default: us-west-1
+Resources:
+  UpdateZendeskUserFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      CodeUri: src/handlers
+      Handler: resolveZendeskUserFunction.resolveZendeskUser
+      Events:
+        ValidateUserExternalId:
+          Type: Api
+          Properties:
+            Path: /zduser/{id}
+            Method: put
+
+Outputs:
+  # ServerlessRestApi is an implicit API created out of Events key under Serverless::Function
+  # Find out more about other implicit resources you can reference within SAM
+  # https://github.com/awslabs/serverless-application-model/blob/master/docs/internals/generated_resources.rst#api
+  ZendeskUserAPI:
+    Description: 'API Gateway endpoint URL for Prod stage for Zendesk User API'
+    Value: !Sub 'https://${ServerlessRestApi}.execute-api.${AWS::Region}.amazonaws.com/Prod/zduser/'
+  CreateZdUserFunction:
+    Description: 'CreateZdUser Lambda Function ARN'
+    Value: !GetAtt CreateZdUserFunction.Arn
