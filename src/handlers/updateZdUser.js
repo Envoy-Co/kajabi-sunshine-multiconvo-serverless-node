@@ -1,13 +1,12 @@
 require('dotenv').config();
 const axios = require('axios');
 
-exports.resolveZendeskUser = async (event, context, callback) => {
-  const sandboxDomain = 'https://kajabi1639069411.zendesk.com';
+exports.updateZdUser = async (event, context, callback) => {
   const email = event.email;
   const externalId = event?.externalId;
-  const searchQuery = `${sandboxDomain}/api/v2/users/search?query=email:${email}`;
+  const searchQuery = `${process.env.ZD_DOMAIN}/api/v2/users/search?query=email:${email}`;
 
-  const getZdUser = async () => {
+  const getUser = async () => {
     try {
       const res = await axios.get(searchQuery, {
         auth: {
@@ -21,7 +20,7 @@ exports.resolveZendeskUser = async (event, context, callback) => {
     }
   };
 
-  const updateZdUser = async (user_id, external_id) => {
+  const updateUser = async (user_id, external_id) => {
     const updateUrl = `${sandboxDomain}/api/v2/users/${user_id}`;
     try {
       const res = await axios.put(updateUrl, {
@@ -41,10 +40,10 @@ exports.resolveZendeskUser = async (event, context, callback) => {
     }
   };
 
-  const zdUser = await getZdUser();
+  const zdUser = await getUser();
 
   if (!zdUser.external_id) {
-    const response = await updateZdUser(zdUser.id);
+    const response = await updateUser(zdUser.id);
     return response;
   }
   return 'user/id exists';

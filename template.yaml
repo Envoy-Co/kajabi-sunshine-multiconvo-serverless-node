@@ -22,7 +22,7 @@ Resources:
     Type: AWS::Serverless::Function
     Properties:
       CodeUri: src/handlers
-      Handler: resolveZendeskUserFunction.resolveZendeskUser
+      Handler: updateZdUser.updateZdUser
       Events:
         ValidateUserExternalId:
           Type: Api
