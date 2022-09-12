@@ -3,8 +3,6 @@ Transform: AWS::Serverless-2016-10-31
 Description: >
   sunshine-multiconvo-serverless-node
 
-  Sample SAM Template for sunshine-multiconvo-serverless-node
-
 # More info about Globals: https://github.com/awslabs/serverless-application-model/blob/master/docs/globals.rst
 Globals:
   Function:
