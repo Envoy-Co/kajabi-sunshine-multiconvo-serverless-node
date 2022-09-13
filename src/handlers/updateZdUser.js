@@ -4,9 +4,9 @@ const axios = require('axios');
 exports.updateZdUser = async (event, context, callback) => {
   const email = event.email;
   const externalId = event?.externalId;
-  const searchQuery = `${process.env.ZD_DOMAIN}/api/v2/users/search?query=email:${email}`;
+  const searchUrl = `${process.env.ZD_DOMAIN}/api/v2/users/search?query=email:${email}`;
 
-  const getUser = async () => {
+  const getUser = async searchQuery => {
     try {
       const res = await axios.get(searchQuery, {
         auth: {
@@ -40,10 +40,10 @@ exports.updateZdUser = async (event, context, callback) => {
     }
   };
 
-  const zdUser = await getUser();
+  const zdUser = await getUser(searchUrl);
 
   if (!zdUser.external_id) {
-    const response = await updateUser(zdUser.id);
+    const response = await updateUser(zdUser.id, externalId);
     return response;
   }
   return 'user/id exists';
